@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ accion }} Empleado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #09111d;
+            --panel: #111827;
+            --line: rgba(148, 163, 184, 0.18);
+            --text: #e5edf9;
+            --muted: #9db0c9;
+            --primary: #60a5fa;
+            --primary-2: #3b82f6;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            background: radial-gradient(circle at top, #162136 0%, #09111d 40%, #050c17 100%);
+            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .panel {
+            width: min(720px, 92vw);
+            background: rgba(17,24,39,0.96);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            box-shadow: 0 24px 60px rgba(2,6,23,0.45);
+            overflow: hidden;
+        }
+        .panel-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            padding: 24px 24px 18px;
+        }
+        .panel-header h1 { margin: 0; font-size: 2rem; }
+        .panel-body { padding: 24px; }
+        .form-control, .form-control:focus, .form-select {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--line);
+            color: var(--text);
+            border-radius: 12px;
+            padding: 0.8rem 0.9rem;
+            box-shadow: none;
+        }
+        .form-select option {
+            background: #ffffff;
+            color: #0f172a;
+        }
+        .form-select:disabled {
+            color: #94a3b8;
+            opacity: 1;
+        }
+        label { color: var(--muted); font-weight: 600; margin-bottom: 8px; }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            border: 0;
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            font-weight: 700;
+        }
+        .btn-secondary {
+            background: rgba(148,163,184,0.12);
+            border: 1px solid var(--line);
+            color: var(--text);
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="panel">
+        <div class="panel-header">
+            <p class="mb-2 text-uppercase small text-white-50">Gestión</p>
+            <h1>{{ accion }} empleado</h1>
+        </div>
+        <div class="panel-body">
+            <form method="POST">
+                {% csrf_token %}
+                {% for field in form %}
+                    {% if field.name == 'departamento' %}
+                        <p>
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {{ field.errors }}
+                        </p>
+                    {% elif field.name == 'cargo' %}
+                        <p>
+                            {{ field.label_tag }}
+                            <select name="cargo" id="id_cargo" class="form-select" required>
+                                <option value="">Selecciona un departamento primero</option>
+                                {% for cargo in form.all_cargos %}
+                                    <option value="{{ cargo.pk }}" data-departamento="{{ cargo.departamento_id }}" {% if field.value|stringformat:'s' == cargo.pk|stringformat:'s' %}selected{% endif %}>
+                                        {{ cargo.nombre_cargo }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {{ field.errors }}
+                        </p>
+                    {% else %}
+                        <p>
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {{ field.errors }}
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                        </p>
+                    {% endif %}
+                {% endfor %}
+                <div class="d-flex gap-2 mt-3 flex-wrap">
+                    <button type="submit" class="btn btn-primary flex-grow-1">Guardar datos</button>
+                    <a href="{% url 'lista_empleados' %}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        const departamento = document.getElementById('id_departamento');
+        const cargo = document.getElementById('id_cargo');
+        const opcionesCargo = Array.from(cargo.options).slice(1);
+
+        function actualizarCargos() {
+            const departamentoSeleccionado = departamento.value;
+            const cargoActual = cargo.value;
+            cargo.innerHTML = '<option value="">Selecciona un cargo</option>';
+
+            opcionesCargo.forEach((opcion) => {
+                if (opcion.dataset.departamento === departamentoSeleccionado) {
+                    cargo.appendChild(opcion);
+                }
+            });
+
+            if (Array.from(cargo.options).some((opcion) => opcion.value === cargoActual)) {
+                cargo.value = cargoActual;
+            }
+            cargo.disabled = !departamentoSeleccionado;
+        }
+
+        departamento.addEventListener('change', actualizarCargos);
+        actualizarCargos();
+    </script>
+</body>
+</html>

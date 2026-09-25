@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar perfil</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f3f7ff;
+            --panel: #ffffff;
+            --line: rgba(148, 163, 184, 0.45);
+            --text: #0f172a;
+            --muted: #475569;
+            --primary: #2563eb;
+            --primary-2: #1d4ed8;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #eef4ff 0%, #f8fafc 45%, #eef2ff 100%);
+            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .panel {
+            width: min(640px, 92vw);
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+            overflow: hidden;
+        }
+        .panel-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            padding: 24px 24px 18px;
+        }
+        .panel-header h1 { margin: 0; font-size: 2rem; }
+        .panel-body { padding: 24px; }
+        .panel-body p,
+        .panel-body label,
+        .panel-body .helptext,
+        .panel-body .errorlist { color: var(--text); }
+        .panel-body .helptext { color: var(--muted); }
+        .panel-body .errorlist { color: #b91c1c; }
+        .form-control, .form-control:focus, .form-select {
+            background: #f8fafc;
+            border: 1px solid var(--line);
+            color: var(--text);
+            border-radius: 12px;
+            padding: 0.8rem 0.9rem;
+            box-shadow: none;
+        }
+        label { color: var(--text); font-weight: 600; margin-bottom: 8px; }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            border: 0;
+            border-radius: 12px;
+            padding: 0.9rem 1rem;
+            font-weight: 700;
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.20);
+        }
+        .btn-secondary {
+            background: #e2e8f0;
+            border: 1px solid var(--line);
+            color: #0f172a;
+            border-radius: 12px;
+            padding: 0.9rem 1rem;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="panel">
+        <div class="panel-header">
+            <p class="mb-2 text-uppercase small text-white-50">Perfil</p>
+            <h1>Editar perfil</h1>
+        </div>
+        <div class="panel-body">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="d-flex gap-2 mt-3 flex-wrap">
+                    <button type="submit" class="btn btn-primary flex-grow-1">Guardar cambios</button>
+                    <a href="{% url 'bienvenida' %}" class="btn btn-secondary">Volver</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
