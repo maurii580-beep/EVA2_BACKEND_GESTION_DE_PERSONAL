@@ -1,8 +1,23 @@
+from functools import wraps
+
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .models import Empleado, Departamento, Cargo
 from .forms import EmpleadoForm
+
+
+def administrador_required(view_func):
+    @wraps(view_func)
+    @login_required
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_staff:
+            raise PermissionDenied
+        return view_func(request, *args, **kwargs)
+
+    return wrapper
+
 
 # ==========================================
 # Inicio del módulo personal
@@ -59,7 +74,7 @@ def lista_empleados(request):
 # ==========================================
 # 2. CREATE: Registrar un nuevo empleado
 # ==========================================
-@login_required
+@administrador_required
 def crear_empleado(request):
     if request.method == 'POST':
         form = EmpleadoForm(request.POST)
@@ -81,7 +96,7 @@ def detalle_empleado(request, empleado_id):
 # ==========================================
 # 4. UPDATE: Editar un empleado existente
 # ==========================================
-@login_required
+@administrador_required
 def editar_empleado(request, empleado_id):
     empleado = get_object_or_404(Empleado, id=empleado_id)
     if request.method == 'POST':
@@ -96,7 +111,7 @@ def editar_empleado(request, empleado_id):
 # ==========================================
 # 5. DELETE: Eliminar un empleado
 # ==========================================
-@login_required
+@administrador_required
 def eliminar_empleado(request, empleado_id):
     empleado = get_object_or_404(Empleado, id=empleado_id)
     if request.method == 'POST':

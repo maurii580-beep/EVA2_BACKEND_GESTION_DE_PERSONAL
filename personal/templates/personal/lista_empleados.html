@@ -148,12 +148,16 @@
                     <p class="mb-2 text-uppercase small text-white-50">Administración</p>
                     <h1>Gestión de personal</h1>
                 </div>
-                <a href="{% url 'crear_empleado' %}" class="btn btn-success">Registrar empleado</a>
+                {% if request.user.is_staff %}
+                    <a href="{% url 'crear_empleado' %}" class="btn btn-success">Registrar empleado</a>
+                {% endif %}
             </div>
             <div class="panel-body">
                 <div class="mb-3 d-flex flex-wrap gap-2">
-                    <a href="/admin/personal/cargo/" class="btn btn-secondary btn-sm">Administrar cargos</a>
-                    <a href="/admin/personal/departamento/" class="btn btn-secondary btn-sm">Administrar departamentos</a>
+                    {% if request.user.is_staff %}
+                        <a href="/admin/personal/cargo/" class="btn btn-secondary btn-sm">Administrar cargos</a>
+                        <a href="/admin/personal/departamento/" class="btn btn-secondary btn-sm">Administrar departamentos</a>
+                    {% endif %}
                     <a href="{% url 'home' %}" class="btn btn-secondary btn-sm">Volver al home</a>
                 </div>
 
@@ -224,8 +228,10 @@
                                 <td>
                                     <div class="d-flex gap-2 flex-wrap">
                                         <a href="{% url 'detalle_empleado' empleado.id %}" class="btn btn-info btn-mini">Ver</a>
-                                        <a href="{% url 'editar_empleado' empleado.id %}" class="btn btn-warning btn-mini">Editar</a>
-                                        <a href="{% url 'eliminar_empleado' empleado.id %}" class="btn btn-danger btn-mini">Eliminar</a>
+                                        {% if request.user.is_staff %}
+                                            <a href="{% url 'editar_empleado' empleado.id %}" class="btn btn-warning btn-mini">Editar</a>
+                                            <a href="{% url 'eliminar_empleado' empleado.id %}" class="btn btn-danger btn-mini">Eliminar</a>
+                                        {% endif %}
                                     </div>
                                 </td>
                             </tr>

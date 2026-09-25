@@ -13,6 +13,12 @@ Sistema web de gestión interna para **MarketChile**, una multitienda ficticia d
 - Edición del perfil y eliminación de la cuenta autenticada.
 - Interfaz del dashboard adaptable a escritorio y dispositivos móviles.
 
+## Permisos de gestión
+
+- Los usuarios autenticados pueden consultar y filtrar el listado y ver el detalle de los empleados.
+- Solo las cuentas administradoras (`is_staff`) pueden crear, editar o eliminar empleados. La restricción también se valida en las vistas, por lo que ocultar los botones no es la única protección.
+- Para habilitar a un administrador, un superusuario debe marcar **Acceso al sitio de administración** en la cuenta desde `/admin/`. El registro público no permite activar este privilegio.
+
 ## Mejoras implementadas
 
 - Se incorporaron en el dashboard las métricas de operación conectadas a los datos reales.
