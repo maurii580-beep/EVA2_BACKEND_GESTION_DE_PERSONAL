@@ -4,19 +4,23 @@ Sistema web de gestión interna para **MarketChile**, una multitienda ficticia d
 
 ## Funcionalidades
 
-- Registro e inicio de sesión de usuarios.
-- Dashboard principal con la identidad visual de MarketChile.
-- Métricas reales obtenidas desde la base de datos:
-  - Equipo total.
-  - Colaboradores activos.
-  - Registros inactivos.
-  - Áreas de negocio.
-  - Cargos disponibles.
-- Creación, consulta, edición y eliminación de empleados.
-- Gestión de departamentos y cargos.
-- Edición del perfil del usuario autenticado.
-- Eliminación de cuenta.
-- Diseño responsive para escritorio y dispositivos móviles.
+- Registro, inicio y cierre de sesión; el dashboard y las operaciones de cuenta requieren autenticación.
+- Dashboard de MarketChile con métricas calculadas desde la base de datos: empleados totales, activos e inactivos, departamentos y cargos.
+- Listado de cargos disponibles en el dashboard, mostrando el departamento asociado y un estado vacío cuando no hay cargos registrados.
+- Gestión de empleados: creación, listado, detalle, edición y eliminación con confirmación.
+- Formularios de empleado con selección de cargo filtrada por departamento.
+- Modelos relacionados de departamentos, cargos y empleados; se restringe eliminar departamentos o cargos que estén en uso.
+- Edición del perfil y eliminación de la cuenta autenticada.
+- Interfaz del dashboard adaptable a escritorio y dispositivos móviles.
+
+## Mejoras implementadas
+
+- Se incorporaron en el dashboard las métricas de operación conectadas a los datos reales.
+- Se muestra el catálogo de cargos con su departamento para consultar las opciones disponibles sin salir del dashboard.
+- Se organizaron las operaciones frecuentes del equipo y accesos al perfil en el centro de operaciones.
+- Se añadieron páginas para consultar el detalle del empleado y confirmar su eliminación.
+- El formulario de empleados limita los cargos disponibles según el departamento seleccionado.
+- Se mejoró la presentación responsive del dashboard y de las pantallas del módulo de personal con Bootstrap.
 
 ## Tecnologías
 

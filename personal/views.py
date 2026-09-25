@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from .models import Empleado, Departamento, Cargo
 from .forms import EmpleadoForm
 
@@ -15,8 +16,45 @@ def inicio(request):
 # ==========================================
 @login_required
 def lista_empleados(request):
-    empleados = Empleado.objects.all()
-    return render(request, 'personal/lista_empleados.html', {'empleados': empleados})
+    busqueda = request.GET.get('q', '').strip()
+    departamento_id = request.GET.get('departamento', '')
+    cargo_id = request.GET.get('cargo', '')
+    estado = request.GET.get('estado', '')
+
+    empleados = Empleado.objects.select_related('cargo', 'departamento')
+    if busqueda:
+        empleados = empleados.filter(
+            Q(rut__icontains=busqueda)
+            | Q(nombre__icontains=busqueda)
+            | Q(apellido__icontains=busqueda)
+            | Q(correo_electronico__icontains=busqueda)
+            | Q(cargo__nombre_cargo__icontains=busqueda)
+            | Q(departamento__nombre__icontains=busqueda)
+        )
+    if departamento_id.isdigit():
+        empleados = empleados.filter(departamento_id=departamento_id)
+    else:
+        departamento_id = ''
+    if cargo_id.isdigit():
+        empleados = empleados.filter(cargo_id=cargo_id)
+    else:
+        cargo_id = ''
+    if estado in dict(Empleado.ESTADOS_CHOICES):
+        empleados = empleados.filter(estado=estado)
+    else:
+        estado = ''
+
+    context = {
+        'empleados': empleados,
+        'departamentos': Departamento.objects.order_by('nombre'),
+        'cargos': Cargo.objects.order_by('nombre_cargo'),
+        'busqueda': busqueda,
+        'departamento_seleccionado': departamento_id,
+        'cargo_seleccionado': cargo_id,
+        'estado_seleccionado': estado,
+        'filtros_activos': any((busqueda, departamento_id, cargo_id, estado)),
+    }
+    return render(request, 'personal/lista_empleados.html', context)
 
 # ==========================================
 # 2. CREATE: Registrar un nuevo empleado

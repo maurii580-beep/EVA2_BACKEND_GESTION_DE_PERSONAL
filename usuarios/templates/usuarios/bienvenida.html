@@ -526,6 +526,25 @@
                     </div>
                 </div>
             </section>
+
+            <section class="panel" style="margin-top: 20px;">
+                <h3>Cargos disponibles <span class="task-meta">({{ total_cargos }})</span></h3>
+                <div class="panel-list">
+                    {% for cargo in cargos %}
+                        <div class="task-item">
+                            <div>
+                                <div class="task-name">{{ cargo.nombre_cargo }}</div>
+                                <div class="task-meta">{{ cargo.departamento.nombre }}</div>
+                            </div>
+                            <span class="badge primary">Disponible</span>
+                        </div>
+                    {% empty %}
+                        <div class="task-item">
+                            <div class="task-meta">No hay cargos registrados.</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
         </main>
     </div>
 </body>

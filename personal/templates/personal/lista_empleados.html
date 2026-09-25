@@ -47,6 +47,19 @@
         }
         .panel-header h1 { margin: 0; }
         .panel-body { padding: 24px; }
+        .filter-label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--muted);
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+        .filter-control {
+            min-height: 42px;
+            border-color: rgba(148, 163, 184, 0.45);
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
         .btn-primary {
             background: linear-gradient(135deg, var(--primary), var(--primary-2));
             border: 0;
@@ -144,6 +157,44 @@
                     <a href="{% url 'home' %}" class="btn btn-secondary btn-sm">Volver al home</a>
                 </div>
 
+                <form method="get" class="row g-3 align-items-end mb-4">
+                    <div class="col-12 col-lg-4">
+                        <label for="q" class="filter-label">Buscar personal</label>
+                        <input type="search" id="q" name="q" value="{{ busqueda }}" class="form-control filter-control" placeholder="Nombre, RUT, correo o cargo">
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-2">
+                        <label for="departamento" class="filter-label">Departamento</label>
+                        <select id="departamento" name="departamento" class="form-select filter-control">
+                            <option value="">Todos</option>
+                            {% for departamento in departamentos %}
+                                <option value="{{ departamento.id }}" {% if departamento.id|stringformat:'s' == departamento_seleccionado %}selected{% endif %}>{{ departamento.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-2">
+                        <label for="cargo" class="filter-label">Cargo</label>
+                        <select id="cargo" name="cargo" class="form-select filter-control">
+                            <option value="">Todos</option>
+                            {% for cargo in cargos %}
+                                <option value="{{ cargo.id }}" {% if cargo.id|stringformat:'s' == cargo_seleccionado %}selected{% endif %}>{{ cargo.nombre_cargo }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-2">
+                        <label for="estado" class="filter-label">Estado</label>
+                        <select id="estado" name="estado" class="form-select filter-control">
+                            <option value="">Todos</option>
+                            <option value="Activo" {% if estado_seleccionado == 'Activo' %}selected{% endif %}>Activo</option>
+                            <option value="Inactivo" {% if estado_seleccionado == 'Inactivo' %}selected{% endif %}>Inactivo</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-2 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary flex-grow-1">Buscar</button>
+                        <a href="{% url 'lista_empleados' %}" class="btn btn-secondary" aria-label="Limpiar búsqueda y filtros">Limpiar</a>
+                    </div>
+                </form>
+                <p class="text-white-50 small mb-3">{{ empleados|length }} resultado(s)</p>
+
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">
                         <thead>
@@ -180,7 +231,13 @@
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="6" class="text-center text-muted py-4">No hay personal registrado en la tienda aún.</td>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    {% if filtros_activos %}
+                                        No se encontraron empleados con esos criterios.
+                                    {% else %}
+                                        No hay personal registrado en la tienda aún.
+                                    {% endif %}
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>

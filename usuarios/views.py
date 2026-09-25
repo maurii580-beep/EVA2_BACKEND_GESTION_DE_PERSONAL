@@ -58,7 +58,8 @@ def bienvenida(request):
     total_activos = Empleado.objects.filter(estado='Activo').count()
     total_inactivos = Empleado.objects.filter(estado='Inactivo').count()
     total_departamentos = Departamento.objects.count()
-    total_cargos = Cargo.objects.count()
+    cargos = Cargo.objects.select_related('departamento').order_by('nombre_cargo')
+    total_cargos = cargos.count()
 
     context = {
         'total_empleados': total_empleados,
@@ -66,6 +67,7 @@ def bienvenida(request):
         'total_inactivos': total_inactivos,
         'total_departamentos': total_departamentos,
         'total_cargos': total_cargos,
+        'cargos': cargos,
     }
 
     #mostramos el archivo HTML de bienvenida
